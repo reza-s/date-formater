@@ -1,131 +1,127 @@
-import Head from 'next/head';
-import styles from '../styles/Home.module.css';
+import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-export default function Home() {
+const defaultTheme = createTheme();
+
+function formater(initialDate, lastDate) {
+  // Parse the input dates
+  const startDate = new Date(initialDate);
+  const endDate = new Date(lastDate);
+
+  // Check if startDate is indeed older than endDate
+  if (startDate >= endDate) {
+      return "The first date must be older than the second date.";
+  }
+
+  // Calculate difference in milliseconds
+  const diffTime = Math.abs(endDate - startDate);
+
+  // Convert difference to days
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  // Calculate weeks and days
+  const weeks = Math.floor(diffDays / 7);
+  const days = diffDays % 7;
+
+  // Create output format
+  return `${weeks}w${days}d`;
+}
+
+export default function dateFormater() {
+  const [output, setOutput] = React.useState(''); // Add this line to create a state for the output
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const initialDate = data.get('initialDate');
+    const lastDate = data.get('lastDate');
+    const result = formater(initialDate, lastDate);
+    setOutput(result); // Set the output state to the result
+  };
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing <code>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+    <ThemeProvider theme={defaultTheme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
         >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel" className={styles.logo} />
-        </a>
-      </footer>
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Date Formater
+          </Typography>
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+              <TextField
+                  autoComplete="Start Date"
+                  name="initialDate"
+                  required
+                  fullWidth
+                  id="initDate"
+                  label="Start Date"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+              <TextField
+                  required
+                  fullWidth
+                  id="lastDate"
+                  label="Last Date"
+                  name="lastDate"
+                  autoComplete="Last Date"
+                />
+              </Grid>
+              <Button item xs={12}
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 5, mb: 1.5, ml:2 }}
+            >
+              Format
+            </Button>
 
-      <style jsx>{`
-        main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-        footer {
-          width: 100%;
-          height: 100px;
-          border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        footer img {
-          margin-left: 0.5rem;
-        }
-        footer a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          text-decoration: none;
-          color: inherit;
-        }
-        code {
-          background: #fafafa;
-          border-radius: 5px;
-          padding: 0.75rem;
-          font-size: 1.1rem;
-          font-family:
-            Menlo,
-            Monaco,
-            Lucida Console,
-            Liberation Mono,
-            DejaVu Sans Mono,
-            Bitstream Vera Sans Mono,
-            Courier New,
-            monospace;
-        }
-      `}</style>
+            </Grid>
+            <Grid>
+            <TextField
+              fullWidth
+              name="output"
+              label="output"
+              type="output"
+              id="output"
+              sx={{mb: 2}}
+              value={output} // Set the value to the output state
+              InputProps={{
+                readOnly: true, // Make the field read-only
+              }}
+            />
+            </Grid>
+            
 
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family:
-            -apple-system,
-            BlinkMacSystemFont,
-            Segoe UI,
-            Roboto,
-            Oxygen,
-            Ubuntu,
-            Cantarell,
-            Fira Sans,
-            Droid Sans,
-            Helvetica Neue,
-            sans-serif;
-        }
-        * {
-          box-sizing: border-box;
-        }
-      `}</style>
-    </div>
+          </Box>
+        </Box>
+    
+      </Container>
+    </ThemeProvider>
   );
 }
