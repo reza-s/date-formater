@@ -3,9 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -16,39 +13,32 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 const defaultTheme = createTheme();
 
 function formater(initialDate, lastDate) {
-  // Parse the input dates
   const startDate = new Date(initialDate);
   const endDate = new Date(lastDate);
 
-  // Check if startDate is indeed older than endDate
   if (startDate >= endDate) {
       return "The first date must be older than the second date.";
   }
 
-  // Calculate difference in milliseconds
   const diffTime = Math.abs(endDate - startDate);
 
-  // Convert difference to days
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-  // Calculate weeks and days
   const weeks = Math.floor(diffDays / 7);
   const days = diffDays % 7;
 
-  // Create output format
   return `${weeks}w${days}d`;
 }
 
 export default function dateFormater() {
-  const [output, setOutput] = React.useState(''); // Add this line to create a state for the output
-
+  const [output, setOutput] = React.useState('');
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const initialDate = data.get('initialDate');
     const lastDate = data.get('lastDate');
     const result = formater(initialDate, lastDate);
-    setOutput(result); // Set the output state to the result
+    setOutput(result);
   };
 
   return (
@@ -110,9 +100,9 @@ export default function dateFormater() {
               type="output"
               id="output"
               sx={{mb: 2}}
-              value={output} // Set the value to the output state
+              value={output}
               InputProps={{
-                readOnly: true, // Make the field read-only
+                readOnly: true,
               }}
             />
             </Grid>
